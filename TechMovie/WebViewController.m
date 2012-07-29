@@ -48,8 +48,8 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    // 動画なので回転に対応する
-    return YES;
+    // 動画なので回転に対応するが上下反対はアウト
+    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)webView
@@ -65,6 +65,7 @@
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     [actIndicator stopAnimating];
     actIndicatorBack.hidden = YES;
+    self.navBar.topItem.title = [self.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
 }
 
 - (IBAction)back:(id)sender {

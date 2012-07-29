@@ -1,20 +1,18 @@
 //
-//  SettingViewController.m
+//  NavigationViewController1.m
 //  TechMovie
 //
-//  Created by 達郎 植田 on 12/07/11.
+//  Created by 達郎 植田 on 12/07/21.
 //  Copyright (c) 2012年 __MyCompanyName__. All rights reserved.
 //
 
-#import "SettingViewController.h"
+#import <UIKit/UIKit.h>
 
-@interface SettingViewController ()
+@interface NavigationViewController1 : UINavigationController
 
 @end
 
-@implementation SettingViewController
-@synthesize tagField;
-@synthesize tagString = _tagString;
+@implementation NavigationViewController1
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -25,16 +23,24 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        // Custom initialization
+        self.tabBarItem.title = [[NSUserDefaults standardUserDefaults] objectForKey:@"Tag1"];
+    }
+    return self;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    tagField.text = [[NSUserDefaults standardUserDefaults] objectForKey:self.tagString];    
 }
 
 - (void)viewDidUnload
 {
-    [self setTagField:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -44,14 +50,4 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
-{
-    [[NSUserDefaults standardUserDefaults] setObject:tagField.text forKey:_tagString];
-    [tagField resignFirstResponder];
-    return YES;
-}
-
-- (IBAction)back:(id)sender {
-    [self dismissModalViewControllerAnimated:YES];
-}
 @end

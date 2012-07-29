@@ -11,7 +11,11 @@
 #import "RSSEntry.h"
 #import "WebViewController.h"
 #import "SettingViewController.h"
-#import "ANHTMLDocument.h"
+#import "UIImageView+AFNetworking.h"
+#import "AFJSONRequestOperation.h"
+
+const NSString *kStringURLHatebu = 
+@"http://pipes.yahoo.com/pipes/pipe.run?_id=6adb7c2f4644af358fbe273293c80e43&_render=rss&tag=";
 
 // リストアイテムのソート用関数
 // 日付の降順ソートで使用する
@@ -46,7 +50,8 @@ static NSInteger dateDescending(id item1, id item2, void *context)
         _itemsArray = nil;
         _tagString = @"Tag";
         _reloadIsNeeded = YES;
-        _defaultTagString = @"技術";
+        _ogImages = [NSMutableArray array];
+        _bkmImages = [NSMutableArray array];
     }
     return self;
 }
@@ -82,11 +87,25 @@ static NSInteger dateDescending(id item1, id item2, void *context)
     // 親クラスの処理を呼び出す
     [super viewWillAppear:animated];
     
-    // URLの配列を作成するためユーザーデフォルトから設定を読み込む
+    // URLの配列を作成するためユーザーデフォルトからキーワードを読み込む
     NSString *keywordPlainString = [[NSUserDefaults standardUserDefaults] objectForKey:_tagString];
-    if (!keywordPlainString) {
-        keywordPlainString = _defaultTagString;
-    }
+    
+    // タブバーのタイトルを変える
+    self.navigationController.title = keywordPlainString;
+    
+    // ナビゲーションアイテムのタイトルを変える
+    self.navigationItem.title = [NSString stringWithFormat:@"「%@」の新着動画", keywordPlainString];
+    
+    //    [self requestTableData];
+}
+
+- (void)requestTableData
+{
+    //    // キャッシュをクリアする
+    //    _ogImages = nil;
+    
+    // URLの配列を作成するためユーザーデフォルトからキーワードを読み込む
+    NSString *keywordPlainString = [[NSUserDefaults standardUserDefaults] objectForKey:_tagString];
     
     // タブバーのタイトルを変える
     self.navigationController.title = keywordPlainString;
@@ -98,10 +117,14 @@ static NSInteger dateDescending(id item1, id item2, void *context)
     if (self.reloadIsNeeded) {
         
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"読み込んでいます"
-                                                            message:nil // @"\n\n"
+                                                            message:@"\n\n"
                                                            delegate:self
                                                   cancelButtonTitle:@"キャンセル"
                                                   otherButtonTitles:nil];
+        _progressView = [[UIProgressView alloc]
+                         initWithFrame:CGRectMake(30.0f, 60.0f, 225.0f, 90.0f)];
+        [alertView addSubview:_progressView];
+        [_progressView setProgressViewStyle: UIProgressViewStyleBar];
         [alertView show];
         
         // 別スレッドを立てる
@@ -111,7 +134,8 @@ static NSInteger dateDescending(id item1, id item2, void *context)
             // RSSファイルのURLをつくる
             NSString *escapedUrlString = [keywordPlainString 
                                           stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-            NSString *myPipeURLString = [NSString stringWithFormat:@"http://pipes.yahoo.com/pipes/pipe.run?_id=9c1e3c39f4e2e5af59164db181479929&_render=rss&tag=%@", escapedUrlString];
+            NSString *myPipeURLString = 
+            [NSString stringWithFormat:@"%@%@", kStringURLHatebu, escapedUrlString];
             
             // urlArrayをつくる
             NSArray *urls = [NSArray arrayWithObject:myPipeURLString];
@@ -127,6 +151,7 @@ static NSInteger dateDescending(id item1, id item2, void *context)
             [self reloadFromContentsOfURLsFromArray:urlArray];
             NSLog(@"reloaded from contents of URLs");
             
+            // メインスレッドに戻す
             NSOperationQueue *mainQueue = [NSOperationQueue mainQueue];
             [mainQueue addOperationWithBlock:^{
                 
@@ -135,7 +160,7 @@ static NSInteger dateDescending(id item1, id item2, void *context)
                 [self.tableView reloadData];
             }];
         }];
-    }
+    }    
 }
 
 #pragma mark - Table view data source
@@ -159,33 +184,100 @@ static NSInteger dateDescending(id item1, id item2, void *context)
         // セルを作成する
         cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
         
-       // 文字列を設定する
-        UILabel *label1 = (UILabel*)[cell viewWithTag:1];
-        UILabel *label2 = (UILabel*)[cell viewWithTag:2];
-        UILabel *label3 = (UILabel*)[cell viewWithTag:3];
+        UIImageView *imageViewOgImage = (UIImageView *)[cell viewWithTag:5];
         
-        label1.text = [[NSString alloc] initWithString:
+        NSURL *urlOgImage = [[self.itemsArray objectAtIndex:indexPath.row] urlOgImage];
+        if (urlOgImage != nil) {
+            [imageViewOgImage setImageWithURL:urlOgImage
+                             placeholderImage:[UIImage imageNamed:@"loading3.gif"]];
+        }
+        else {
+            UIImage *noImage = [UIImage imageNamed:@"noImage.png"];
+            imageViewOgImage.image = noImage;
+        }
+        
+        
+        //        // URLをつくる
+        //        NSString *urlStringHatena = @"http://b.hatena.ne.jp/entry/jsonlite/?url=";
+        //        NSString *urlStringTarget = [NSString stringWithFormat:@"%@", url2];
+        //        urlStringTarget = [urlStringTarget stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding];
+        //        NSString *urlStringWhole = [NSString stringWithFormat:@"%@%@", urlStringHatena, urlStringTarget]; 
+        //        NSURL *url = [NSURL URLWithString:urlStringWhole];
+        //        //    NSURL *url = [NSURL URLWithString:@"http://b.hatena.ne.jp/entry/jsonlite/?url=http://goodsite.cocolog-nifty.com/"];
+        //        //    NSURL *url = [NSURL URLWithString:@"http://iphone-dev.g.hatena.ne.jp/ktakayama/20120718/1342614096"];
+        //        
+        //        // リクエストを送り、返ってきたJSONを解析して目的のURLを見つけ出す
+        //        NSURLRequest *request = [NSURLRequest requestWithURL:url];
+        //        AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        //            NSURL *ssURL = [NSURL URLWithString:[JSON valueForKeyPath:@"screenshot"]];
+        //            
+        //            // URLから画像を取り出し、ImageViewに貼り付ける
+        //            NSData *data = [NSData dataWithContentsOfURL:ssURL];
+        //            UIImageView *imageView = (UIImageView *)[cell viewWithTag:5];
+        //            imageView.image = [UIImage imageWithData:data];
+        //            NSLog(@"%@", [JSON valueForKeyPath:@"screenshot"]);
+        //        } failure:nil];
+        //        [operation start];
+        
+        
+        
+        // 文字列を設定する
+        UILabel *labelTitle = (UILabel*)[cell viewWithTag:1];
+        UILabel *labelDate = (UILabel*)[cell viewWithTag:2];
+        UILabel *labelDetail = (UILabel*)[cell viewWithTag:3];
+        UILabel *labelHatebuNumber = (UILabel*)[cell viewWithTag:4];
+        
+        // タイトルラベル
+        labelTitle.text = [[NSString alloc] initWithString:
                        [[self.itemsArray objectAtIndex:indexPath.row] title]];
         
+        // 「N日前」というラベル
         NSDate *datePub = [[self.itemsArray objectAtIndex:indexPath.row] date];
         NSTimeInterval t = [datePub timeIntervalSinceNow];
         NSInteger intervalDays = - t / (60 * 60 * 12);
-        
-        label2.text = [[NSString alloc] initWithFormat:@"%d 日前", intervalDays];
-        label3.text = [[NSString alloc] initWithString:
+        labelDate.text = [[NSString alloc] initWithFormat:@"%d 日前", intervalDays];
+
+        // 詳細ラベル
+        labelDetail.text = [[NSString alloc] initWithString:
                        [[self.itemsArray objectAtIndex:indexPath.row] text]];
         
-        NSURL *bkmurl = [[self.itemsArray objectAtIndex:indexPath.row] url];
-        NSString *bkmurlPlainString = [NSString stringWithFormat:@"%@", bkmurl];
-        NSString *bkmurlEscapedString = 
-        [bkmurlPlainString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        NSString* path = 
-        [NSString stringWithFormat:@"http://b.hatena.ne.jp/entry/image/%@", bkmurlEscapedString];
+        // はてなに問い合わせるURLをつくる
+        NSString *urlStringHatena = @"http://b.hatena.ne.jp/entry/jsonlite/?url=";
+        NSString *urlStringTarget = 
+        [NSString stringWithFormat:@"%@", [[self.itemsArray objectAtIndex:indexPath.row] url]];
+        NSString *urlStringWhole = [NSString stringWithFormat:@"%@%@", urlStringHatena, urlStringTarget];
+        NSURL *url = [NSURL URLWithString:urlStringWhole];
+        
+        // リクエストを送り、返ってきたJSONを解析して目的のURLを見つけ出す
+        NSURLRequest *request = [NSURLRequest requestWithURL:url];
+        AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+            NSInteger count = [[JSON valueForKeyPath:@"count"] integerValue];
+            
+            labelHatebuNumber.text = [NSString stringWithFormat:@"%d users", count];
+        } failure:nil];
 
-        NSURL* url = [NSURL URLWithString:path];
-        NSData* data = [NSData dataWithContentsOfURL:url];
-        UIImageView *imageView = (UIImageView *)[cell viewWithTag:4];
-        imageView.image = [[UIImage alloc]initWithData:data];
+//            // URLから画像を取り出し、ImageViewに貼り付ける
+//            NSData *data = [NSData dataWithContentsOfURL:ssURL];
+//            UIImageView *imageView = (UIImageView *)[cell viewWithTag:5];
+//            imageView.image = [UIImage imageWithData:data];
+//            NSLog(@"%@", [JSON valueForKeyPath:@"screenshot"]);
+//            } failure:nil];
+            [operation start];
+//        UIImageView *imageViewBkm = (UIImageView *)[cell viewWithTag:4];
+//        
+//        // 該当項目のURLを取得する
+//        NSURL *bkmurl = [[self.itemsArray objectAtIndex:indexPath.row] url];
+//        
+//        // はてなブックマークのAPIを参照するURLを作成する
+//        NSString *bkmurlPlainString = [NSString stringWithFormat:@"%@", bkmurl];
+//        NSString *bkmurlEscapedString = 
+//        [bkmurlPlainString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//        NSString* path = 
+//        [NSString stringWithFormat:@"http://b.hatena.ne.jp/entry/image/%@", bkmurlEscapedString];
+//        
+//        // 画像を表示する
+//        [imageViewBkm setImageWithURL:[NSURL URLWithString:path] 
+//                     placeholderImage:[UIImage imageNamed:@"loading3.gif"]];
     }
     return cell;
 }
@@ -220,7 +312,7 @@ static NSInteger dateDescending(id item1, id item2, void *context)
     RSSParser *parser = [[RSSParser alloc] init];
     
     // URLから読み込む
-    if ([parser parseContentsOfURL:url]) {
+    if ([parser parseContentsOfURL:url progressView:_progressView]) {
         
         // 記事を読み込む
         [newArray addObjectsFromArray:[parser entries]];

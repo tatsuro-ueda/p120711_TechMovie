@@ -30,9 +30,17 @@
 
 // URLからRSSファイルを読み込む
 // ここではRSS2.0のみ対応する
-- (BOOL)parseContentsOfURL:(NSURL *)url
+- (BOOL)parseContentsOfURL:(NSURL *)url progressView:(UIProgressView *)progressView
 {
+    _progressView = progressView;
     BOOL ret = NO;
+    
+    // 行数をカウントする
+    NSError *error = nil;
+    NSString *xmlFileString = [NSString stringWithContentsOfURL:url
+                                                       encoding:NSUTF8StringEncoding
+                                                          error:&error];
+    _totalLines = [xmlFileString componentsSeparatedByString:@"\n"].count;
     
     // XMLパーサーの準備
     NSXMLParser *parser;
@@ -66,6 +74,13 @@ didStartElement:(NSString *)elementName
 {
     // エレメント位置を把握するためにスタックにエレメント名を追加する
     [self.elementStack addObject:elementName];
+    
+    // プログレスビューの更新
+    // メインスレッドに戻す
+    NSOperationQueue *mainQueue = [NSOperationQueue mainQueue];
+    [mainQueue addOperationWithBlock:^{
+        _progressView.progress = (CGFloat)[parser lineNumber] / (CGFloat)_totalLines;
+    }];
 }
 
 // エレメント終了時の処理
@@ -84,13 +99,20 @@ didStartElement:(NSString *)elementName
         [self.entries addObject:_curEntry];
         self.curEntry = nil;
     }
+
+    // プログレスビューの更新
+    // メインスレッドに戻す
+    NSOperationQueue *mainQueue = [NSOperationQueue mainQueue];
+    [mainQueue addOperationWithBlock:^{
+        _progressView.progress = (CGFloat)[parser lineNumber] / (CGFloat)_totalLines;
+    }];
 }
 
 // エレメントスタックをファイルパスのような文字列にする
 - (NSString *)elementPath
 {
     NSMutableString *path = [NSMutableString stringWithCapacity:0];
-
+    
     for (NSString *str in self.elementStack) {
         
         [path appendFormat:@"/%@", str];
@@ -134,6 +156,34 @@ didStartElement:(NSString *)elementName
         
         // 記事のアドレス
         NSURL *url = [NSURL URLWithString:string];
+        
+        // 該当ページのHTMLを取得する
+        NSString *string = [self encodedStringWithContentsOfURL:url];
+        
+        // 検索するための正規表現を準備する
+        NSError *error   = nil;
+        NSRegularExpression *regexp =
+        [NSRegularExpression regularExpressionWithPattern:
+         @"<meta property=\"og:image\" content=\".+\""
+                                                  options:0
+                                                    error:&error];
+        // 正規表現で検索する
+        NSTextCheckingResult *match =
+        [regexp firstMatchInString:string options:0 range:NSMakeRange(0, string.length)];
+        
+        // 検索結果から最初のものを取り出す
+        NSRange resultRange = [match rangeAtIndex:0];
+        //NSLog(@"match=%@", [string substringWithRange:resultRange]); 
+        
+        if (match) {
+            
+            // 検索結果からog:imageのURLの部分だけを取り出す
+            NSRange urlRange = NSMakeRange(resultRange.location + 35, resultRange.length - 35 - 1);
+            //NSLog(@"url  =%@", [string substringWithRange:urlRange]); 
+            [self currentEntry].urlOgImage = 
+            [NSURL URLWithString:[string substringWithRange:urlRange]];
+        }
+        
         [[self currentEntry] setUrl:url];
     }
     else if ([str isEqualToString:@"/rss/channel/item/pubDate"]) {
@@ -156,6 +206,13 @@ didStartElement:(NSString *)elementName
         
         [[self currentEntry] setText:str];
     }
+    
+    // プログレスビューの更新
+    // メインスレッドに戻す
+    NSOperationQueue *mainQueue = [NSOperationQueue mainQueue];
+    [mainQueue addOperationWithBlock:^{
+        _progressView.progress = (CGFloat)[parser lineNumber] / (CGFloat)_totalLines;
+    }];
 }
 
 // RSS2.0の表記方法で書かれた日時からオブジェクトを取得する
@@ -259,4 +316,34 @@ didStartElement:(NSString *)elementName
     }
     return date;
 }
+
+- (NSString *)encodedStringWithContentsOfURL:(NSURL *)url
+{
+    // Get the web page HTML
+    NSData *data = [NSData dataWithContentsOfURL:url];
+    
+	// response
+	int enc_arr[] = {
+		NSUTF8StringEncoding,			// UTF-8
+		NSShiftJISStringEncoding,		// Shift_JIS
+		NSJapaneseEUCStringEncoding,	// EUC-JP
+		NSISO2022JPStringEncoding,		// JIS
+		NSUnicodeStringEncoding,		// Unicode
+		NSASCIIStringEncoding			// ASCII
+	};
+	NSString *data_str = nil;
+	int max = sizeof(enc_arr) / sizeof(enc_arr[0]);
+	for (int i=0; i<max; i++) {
+		data_str = [
+                    [NSString alloc]
+                    initWithData : data
+                    encoding : enc_arr[i]
+                    ];
+		if (data_str!=nil) {
+			break;
+		}
+	}
+	return data_str;    
+}
+
 @end

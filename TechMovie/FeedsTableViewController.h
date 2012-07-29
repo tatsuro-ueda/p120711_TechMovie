@@ -12,7 +12,9 @@
 {
     NSArray         *_itemsArray;
     NSString        *_tagString;
-    NSString        *_defaultTagString;
+    NSMutableArray  *_ogImages;
+    NSMutableArray  *_bkmImages;
+    UIProgressView  *_progressView;
 }
 // リストに表示するアイテムを格納する配列
 // 各要素は「RSSEntry」クラスのインスタンスとする
@@ -23,5 +25,6 @@
 - (void)reloadFromContentsOfURLsFromArray:(NSArray *)urlsArray;
 - (NSArray *)itemsArrayFromContentsOfURL:(NSURL *)url;
 - (NSURL *)urlAtIndex:(NSInteger)index;
+- (void)requestTableData;
 
 @end

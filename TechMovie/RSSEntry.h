@@ -14,5 +14,6 @@
 @property (strong) NSDate *date;
 @property (strong) NSString *title;
 @property (strong) NSString *text;
+@property (strong) NSURL *urlOgImage;
 
 @end

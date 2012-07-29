@@ -24,14 +24,17 @@
         
         // インスタンス変数の初期化
         _itemsArray = nil;
-        _tagString = @"Tag1";
-        _defaultTagString = @"おもしろ";
+        _tagString = @"Tag2";
     }
     return self;
 }
 
 - (IBAction)showSetting:(id)sender {
     [self performSegueWithIdentifier:@"showSetting" sender:_tagString];
+}
+
+- (IBAction)refresh:(id)sender {
+    [self requestTableData];
 }
 
 @end

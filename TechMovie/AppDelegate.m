@@ -15,6 +15,16 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    if (![[NSUserDefaults standardUserDefaults] objectForKey:@"Tag1"]) {
+        [[NSUserDefaults standardUserDefaults] setObject:@"ネタ" forKey:@"Tag1"];
+    }
+    if (![[NSUserDefaults standardUserDefaults] objectForKey:@"Tag2"]) {
+        [[NSUserDefaults standardUserDefaults] setObject:@"おもしろ" forKey:@"Tag2"];
+    }
+    if (![[NSUserDefaults standardUserDefaults] objectForKey:@"Tag3"]) {
+        [[NSUserDefaults standardUserDefaults] setObject:@"これはすごい" forKey:@"Tag3"];
+    }
+    
     return YES;
 }
 							
