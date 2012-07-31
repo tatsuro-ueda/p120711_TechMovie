@@ -13,6 +13,7 @@
 #import "SettingViewController.h"
 #import "UIImageView+AFNetworking.h"
 #import "AFJSONRequestOperation.h"
+#import "UIImage+GIF.h"
 
 const NSString *kStringURLHatebu = 
 @"http://pipes.yahoo.com/pipes/pipe.run?_id=6adb7c2f4644af358fbe273293c80e43&_render=rss&tag=";
@@ -188,8 +189,9 @@ static NSInteger dateDescending(id item1, id item2, void *context)
         
         NSURL *urlOgImage = [[self.itemsArray objectAtIndex:indexPath.row] urlOgImage];
         if (urlOgImage != nil) {
+            UIImage* image = [UIImage animatedGIFNamed:@"loading3"];
             [imageViewOgImage setImageWithURL:urlOgImage
-                             placeholderImage:[UIImage imageNamed:@"loading3.gif"]];
+                             placeholderImage:image];
         }
         else {
             UIImage *noImage = [UIImage imageNamed:@"noImage.png"];
@@ -238,8 +240,14 @@ static NSInteger dateDescending(id item1, id item2, void *context)
         labelDate.text = [[NSString alloc] initWithFormat:@"%d 日前", intervalDays];
 
         // 詳細ラベル
-        labelDetail.text = [[NSString alloc] initWithString:
-                       [[self.itemsArray objectAtIndex:indexPath.row] text]];
+        // nilチェックしないとクラッシュする
+        NSString *s = [[self.itemsArray objectAtIndex:indexPath.row] text];
+        if (s == nil) {
+            labelDetail.text = @"";
+        }
+        else {
+            labelDetail.text = [[NSString alloc] initWithString:s];
+        }
         
         // はてなに問い合わせるURLをつくる
         NSString *urlStringHatena = @"http://b.hatena.ne.jp/entry/jsonlite/?url=";
@@ -248,36 +256,15 @@ static NSInteger dateDescending(id item1, id item2, void *context)
         NSString *urlStringWhole = [NSString stringWithFormat:@"%@%@", urlStringHatena, urlStringTarget];
         NSURL *url = [NSURL URLWithString:urlStringWhole];
         
-        // リクエストを送り、返ってきたJSONを解析して目的のURLを見つけ出す
+        // リクエストを送り、返ってきたJSONを解析してはてブ数を見つけ出す
         NSURLRequest *request = [NSURLRequest requestWithURL:url];
         AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
             NSInteger count = [[JSON valueForKeyPath:@"count"] integerValue];
             
+            // はてブ数を表示させる
             labelHatebuNumber.text = [NSString stringWithFormat:@"%d users", count];
         } failure:nil];
-
-//            // URLから画像を取り出し、ImageViewに貼り付ける
-//            NSData *data = [NSData dataWithContentsOfURL:ssURL];
-//            UIImageView *imageView = (UIImageView *)[cell viewWithTag:5];
-//            imageView.image = [UIImage imageWithData:data];
-//            NSLog(@"%@", [JSON valueForKeyPath:@"screenshot"]);
-//            } failure:nil];
-            [operation start];
-//        UIImageView *imageViewBkm = (UIImageView *)[cell viewWithTag:4];
-//        
-//        // 該当項目のURLを取得する
-//        NSURL *bkmurl = [[self.itemsArray objectAtIndex:indexPath.row] url];
-//        
-//        // はてなブックマークのAPIを参照するURLを作成する
-//        NSString *bkmurlPlainString = [NSString stringWithFormat:@"%@", bkmurl];
-//        NSString *bkmurlEscapedString = 
-//        [bkmurlPlainString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-//        NSString* path = 
-//        [NSString stringWithFormat:@"http://b.hatena.ne.jp/entry/image/%@", bkmurlEscapedString];
-//        
-//        // 画像を表示する
-//        [imageViewBkm setImageWithURL:[NSURL URLWithString:path] 
-//                     placeholderImage:[UIImage imageNamed:@"loading3.gif"]];
+        [operation start];
     }
     return cell;
 }
