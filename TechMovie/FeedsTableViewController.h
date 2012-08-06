@@ -20,7 +20,6 @@
 // 各要素は「RSSEntry」クラスのインスタンスとする
 @property (strong) NSArray *itemsArray;
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
-@property BOOL reloadIsNeeded;
 
 - (void)reloadFromContentsOfURLsFromArray:(NSArray *)urlsArray;
 - (NSArray *)itemsArrayFromContentsOfURL:(NSURL *)url;

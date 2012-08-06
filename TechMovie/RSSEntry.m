@@ -14,7 +14,7 @@
 @synthesize date = _date;
 @synthesize title = _title;
 @synthesize text = _text;
-@synthesize urlOgImage = _urlOgImage;
+@synthesize ogImageURL = _ogImageURL;
 
 - (id)init
 {
@@ -26,7 +26,7 @@
         _date = nil;
         _title = nil;
         _text = nil;
-        _urlOgImage = nil;
+        _ogImageURL = nil;
     }
     return self;
 }

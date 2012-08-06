@@ -25,6 +25,5 @@
 
 - (BOOL)parseContentsOfURL:(NSURL *)url progressView:(UIProgressView *)progressView;
 - (NSDate *)pubDateWithString:(NSString *)string;
-- (NSString *)encodedStringWithContentsOfURL:(NSURL *)url;
 
 @end

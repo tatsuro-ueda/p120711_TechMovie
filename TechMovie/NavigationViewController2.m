@@ -28,6 +28,9 @@
     self = [super initWithCoder:aDecoder];
     if (self) {
         // Custom initialization
+        if (![[NSUserDefaults standardUserDefaults] objectForKey:@"Tag2"]) {
+            [[NSUserDefaults standardUserDefaults] setObject:@"おもしろ" forKey:@"Tag2"];
+        }
         self.tabBarItem.title = [[NSUserDefaults standardUserDefaults] objectForKey:@"Tag2"];
     }
     return self;

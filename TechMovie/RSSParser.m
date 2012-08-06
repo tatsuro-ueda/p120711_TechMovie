@@ -8,6 +8,8 @@
 
 #import "RSSParser.h"
 #import "RSSEntry.h"
+#import "NSURL+OgImage.h"
+#import "AFJSONRequestOperation.h"
 
 @implementation RSSParser
 
@@ -156,35 +158,49 @@ didStartElement:(NSString *)elementName
         
         // 記事のアドレス
         NSURL *url = [NSURL URLWithString:string];
-        
-        // 該当ページのHTMLを取得する
-        NSString *string = [self encodedStringWithContentsOfURL:url];
-        
-        // 検索するための正規表現を準備する
-        NSError *error   = nil;
-        NSRegularExpression *regexp =
-        [NSRegularExpression regularExpressionWithPattern:
-         @"<meta property=\"og:image\" content=\".+\""
-                                                  options:0
-                                                    error:&error];
-        // 正規表現で検索する
-        NSTextCheckingResult *match =
-        [regexp firstMatchInString:string options:0 range:NSMakeRange(0, string.length)];
-        
-        // 検索結果から最初のものを取り出す
-        NSRange resultRange = [match rangeAtIndex:0];
-        //NSLog(@"match=%@", [string substringWithRange:resultRange]); 
-        
-        if (match) {
-            
-            // 検索結果からog:imageのURLの部分だけを取り出す
-            NSRange urlRange = NSMakeRange(resultRange.location + 35, resultRange.length - 35 - 1);
-            //NSLog(@"url  =%@", [string substringWithRange:urlRange]); 
-            [self currentEntry].urlOgImage = 
-            [NSURL URLWithString:[string substringWithRange:urlRange]];
-        }
-        
         [[self currentEntry] setUrl:url];
+        
+        // 該当ページのog:imageを取得する
+        // この箇所のコメントアウトを外すとog:imageのアドレス取得が非同期に行われる
+//        NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+//        [queue addOperationWithBlock:^{
+        [self currentEntry].ogImageURL = [NSURL ogImageURLWithURL:url];
+//        NSLog(@"%@", [self currentEntry].ogImageURL);
+        
+        // og:imageがない場合
+        if ([self currentEntry].ogImageURL == nil) {
+            
+            // はてなAPIに問い合わせるURLをつくる
+            NSString *urlStringHatena = @"http://b.hatena.ne.jp/entry/jsonlite/?url=";
+            NSString *urlStringTarget = [NSString stringWithFormat:@"%@", url];
+            urlStringTarget = [urlStringTarget stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding];
+            NSString *urlStringWhole = [NSString stringWithFormat:@"%@%@", urlStringHatena, urlStringTarget]; 
+            NSURL *hatenaAPIURL = [NSURL URLWithString:urlStringWhole];
+            
+            // はてなAPIにリクエストを送り、返ってきたJSONを解析してスクリーンショットのURLを見つけ出す
+            NSURLRequest *request = [NSURLRequest requestWithURL:hatenaAPIURL];
+            __block NSURL *ssURL = nil;
+            AFJSONRequestOperation *operation = 
+            [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+//                ssURL = [NSURL URLWithString:[JSON valueForKeyPath:@"screenshot"]];
+                ssURL = [NSURL URLWithString:@"http://www.cnn.co.jp/storage/2012/08/06/1f663d84aef5d894b26fe3303ab112a7/mars-image-nasa.jpg"];
+                NSLog(@"inBlock: %d",(int) ssURL);
+
+//                ssURL = (__bridge NSURL)[NSURL URLWithString:[JSON valueForKeyPath:@"screenshot"]];
+                [self currentEntry].ogImageURL = ssURL;
+//                NSLog(@"ssURL = %@", ssURL);
+//                NSLog(@"curURL = %@", [self currentEntry].ogImageURL);
+            } failure:nil];
+            [operation start];
+//            NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+//            [queue addOperation: operation];
+//            [operation waitUntilFinished];
+//            [self currentEntry].ogImageURL = ssURL;
+//            NSLog(@"outURL = %@", [self currentEntry].ogImageURL);
+//            NSLog(@"outBlock: %d",(int) ssURL);
+//            NSLog(@"outss = %@", ssURL);
+        }                        
+//        }];
     }
     else if ([str isEqualToString:@"/rss/channel/item/pubDate"]) {
         
@@ -315,35 +331,6 @@ didStartElement:(NSString *)elementName
         }
     }
     return date;
-}
-
-- (NSString *)encodedStringWithContentsOfURL:(NSURL *)url
-{
-    // Get the web page HTML
-    NSData *data = [NSData dataWithContentsOfURL:url];
-    
-	// response
-	int enc_arr[] = {
-		NSUTF8StringEncoding,			// UTF-8
-		NSShiftJISStringEncoding,		// Shift_JIS
-		NSJapaneseEUCStringEncoding,	// EUC-JP
-		NSISO2022JPStringEncoding,		// JIS
-		NSUnicodeStringEncoding,		// Unicode
-		NSASCIIStringEncoding			// ASCII
-	};
-	NSString *data_str = nil;
-	int max = sizeof(enc_arr) / sizeof(enc_arr[0]);
-	for (int i=0; i<max; i++) {
-		data_str = [
-                    [NSString alloc]
-                    initWithData : data
-                    encoding : enc_arr[i]
-                    ];
-		if (data_str!=nil) {
-			break;
-		}
-	}
-	return data_str;    
 }
 
 @end

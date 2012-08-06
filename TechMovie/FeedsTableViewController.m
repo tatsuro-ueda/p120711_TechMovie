@@ -38,7 +38,6 @@ static NSInteger dateDescending(id item1, id item2, void *context)
 @implementation FeedsTableViewController
 @synthesize itemsArray = _itemsArray;
 @synthesize tableView = _tableView;
-@synthesize reloadIsNeeded = _reloadIsNeeded;
 
 // Storyboardファイルからインスタンスが作成されたときに
 // 使われるイニシャライザメソッド
@@ -50,7 +49,6 @@ static NSInteger dateDescending(id item1, id item2, void *context)
         // インスタンス変数の初期化
         _itemsArray = nil;
         _tagString = @"Tag";
-        _reloadIsNeeded = YES;
         _ogImages = [NSMutableArray array];
         _bkmImages = [NSMutableArray array];
     }
@@ -102,9 +100,6 @@ static NSInteger dateDescending(id item1, id item2, void *context)
 
 - (void)requestTableData
 {
-    //    // キャッシュをクリアする
-    //    _ogImages = nil;
-    
     // URLの配列を作成するためユーザーデフォルトからキーワードを読み込む
     NSString *keywordPlainString = [[NSUserDefaults standardUserDefaults] objectForKey:_tagString];
     
@@ -115,54 +110,51 @@ static NSInteger dateDescending(id item1, id item2, void *context)
     self.navigationItem.title = [NSString stringWithFormat:@"「%@」の新着動画", keywordPlainString];
     
     // リロードが必要ならば行う
-    if (self.reloadIsNeeded) {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"読み込んでいます"
+                                                        message:@"\n\n"
+                                                       delegate:self
+                                              cancelButtonTitle:@"キャンセル"
+                                              otherButtonTitles:nil];
+    _progressView = [[UIProgressView alloc]
+                     initWithFrame:CGRectMake(30.0f, 60.0f, 225.0f, 90.0f)];
+    [alertView addSubview:_progressView];
+    [_progressView setProgressViewStyle: UIProgressViewStyleBar];
+    [alertView show];
+    
+    // 別スレッドを立てる
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    [queue addOperationWithBlock:^{
         
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"読み込んでいます"
-                                                            message:@"\n\n"
-                                                           delegate:self
-                                                  cancelButtonTitle:@"キャンセル"
-                                                  otherButtonTitles:nil];
-        _progressView = [[UIProgressView alloc]
-                         initWithFrame:CGRectMake(30.0f, 60.0f, 225.0f, 90.0f)];
-        [alertView addSubview:_progressView];
-        [_progressView setProgressViewStyle: UIProgressViewStyleBar];
-        [alertView show];
+        // RSSファイルのURLをつくる
+        NSString *escapedUrlString = [keywordPlainString 
+                                      stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSString *myPipeURLString = 
+        [NSString stringWithFormat:@"%@%@", kStringURLHatebu, escapedUrlString];
         
-        // 別スレッドを立てる
-        NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-        [queue addOperationWithBlock:^{
-            
-            // RSSファイルのURLをつくる
-            NSString *escapedUrlString = [keywordPlainString 
-                                          stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-            NSString *myPipeURLString = 
-            [NSString stringWithFormat:@"%@%@", kStringURLHatebu, escapedUrlString];
-            
-            // urlArrayをつくる
-            NSArray *urls = [NSArray arrayWithObject:myPipeURLString];
-            NSMutableArray *urlArray = [NSMutableArray array];
-            for (NSString *str in urls) {
-                NSURL *url = [NSURL URLWithString:str];
-                if (url) {
-                    [urlArray addObject:url];
-                }
+        // urlArrayをつくる
+        NSArray *urls = [NSArray arrayWithObject:myPipeURLString];
+        NSMutableArray *urlArray = [NSMutableArray array];
+        for (NSString *str in urls) {
+            NSURL *url = [NSURL URLWithString:str];
+            if (url) {
+                [urlArray addObject:url];
             }
+        }
+        
+        // RSSファイルを読み込む
+        [self reloadFromContentsOfURLsFromArray:urlArray];
+        NSLog(@"reloaded from contents of URLs");
+        
+        // メインスレッドに戻す
+        NSOperationQueue *mainQueue = [NSOperationQueue mainQueue];
+        [mainQueue addOperationWithBlock:^{
             
-            // RSSファイルを読み込む
-            [self reloadFromContentsOfURLsFromArray:urlArray];
-            NSLog(@"reloaded from contents of URLs");
-            
-            // メインスレッドに戻す
-            NSOperationQueue *mainQueue = [NSOperationQueue mainQueue];
-            [mainQueue addOperationWithBlock:^{
-                
-                // テーブル更新
-                [alertView dismissWithClickedButtonIndex:0 animated:YES];
-                [self.tableView reloadData];
-            }];
+            // テーブル更新
+            [alertView dismissWithClickedButtonIndex:0 animated:YES];
+            [self.tableView reloadData];
         }];
-    }    
-}
+    }];
+}    
 
 #pragma mark - Table view data source
 
@@ -185,20 +177,22 @@ static NSInteger dateDescending(id item1, id item2, void *context)
         // セルを作成する
         cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
         
+        // og:imageのビュー
         UIImageView *imageViewOgImage = (UIImageView *)[cell viewWithTag:5];
-        
-        NSURL *urlOgImage = [[self.itemsArray objectAtIndex:indexPath.row] urlOgImage];
-        if (urlOgImage != nil) {
-            UIImage* image = [UIImage animatedGIFNamed:@"loading3"];
-            [imageViewOgImage setImageWithURL:urlOgImage
-                             placeholderImage:image];
-        }
-        else {
-            UIImage *noImage = [UIImage imageNamed:@"noImage.png"];
-            imageViewOgImage.image = noImage;
-        }
-        
-        
+        NSURL *ogImageURL = [[self.itemsArray objectAtIndex:indexPath.row] ogImageURL];
+//        NSLog(@"%@", ogImageURL);
+        NSLog(@"inTable: %d",(int) ogImageURL);
+
+//        if (ogImageURL != nil) {
+            UIImage* li = [UIImage animatedGIFNamed:@"loading3"];
+            [imageViewOgImage setImageWithURL:ogImageURL
+                             placeholderImage:li];
+//        }
+//        else {
+//            UIImage *noImage = [UIImage imageNamed:@"noImage.png"];
+//            imageViewOgImage.image = noImage;
+//        }
+                
         //        // URLをつくる
         //        NSString *urlStringHatena = @"http://b.hatena.ne.jp/entry/jsonlite/?url=";
         //        NSString *urlStringTarget = [NSString stringWithFormat:@"%@", url2];
@@ -384,14 +378,12 @@ static NSInteger dateDescending(id item1, id item2, void *context)
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.identifier isEqualToString:@"showWebView"]) {
-        self.reloadIsNeeded = NO;
         WebViewController *controller = segue.destinationViewController;
         NSLog(@"sender = %@", sender);
         controller.URLForSegue = (NSURL *)sender;
         controller.hidesBottomBarWhenPushed = YES;
     }
     else if ([segue.identifier isEqualToString:@"showSetting"]) {
-        self.reloadIsNeeded = YES;
         SettingViewController *controller = segue.destinationViewController;
         controller.tagString = (NSString *)sender;
     }

@@ -15,8 +15,8 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="367"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <adBannerView key="tableHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="DiW-Bv-hbe">
-                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <adBannerView key="tableHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="jUG-Ea-Y8S">
+                            <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
                             <requiredContentSizeIdentifiers>
                                 <string>ADBannerContentSizeLandscape</string>
@@ -88,14 +88,6 @@
                         <segue destination="HCO-fc-Ukc" kind="modal" identifier="showSetting" modalTransitionStyle="partialCurl" id="aTi-FH-ey1"/>
                     </connections>
                 </tableViewController>
-                <adBannerView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="jUG-Ea-Y8S">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                    <requiredContentSizeIdentifiers>
-                        <string>ADBannerContentSizeLandscape</string>
-                        <string>ADBannerContentSizePortrait</string>
-                    </requiredContentSizeIdentifiers>
-                </adBannerView>
             </objects>
             <point key="canvasLocation" x="548" y="-540"/>
         </scene>
@@ -140,20 +132,17 @@
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ad0-I8-z57" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController id="xmd-cg-vC7" customClass="FeedsTableViewController2" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="180" sectionHeaderHeight="22" sectionFooterHeight="22" id="jFb-cr-vrZ">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="150" sectionHeaderHeight="22" sectionFooterHeight="22" id="jFb-cr-vrZ">
                         <rect key="frame" x="0.0" y="64" width="320" height="367"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <adBannerView key="tableHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="fyU-5z-eu3">
-                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <adBannerView key="tableHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="EDp-rQ-n5d">
+                            <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
                             <requiredContentSizeIdentifiers>
                                 <string>ADBannerContentSizeLandscape</string>
                                 <string>ADBannerContentSizePortrait</string>
                             </requiredContentSizeIdentifiers>
-                            <connections>
-                                <outlet property="delegate" destination="xmd-cg-vC7" id="DVF-eE-dBg"/>
-                            </connections>
                         </adBannerView>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="150" id="vev-3H-U2b">
@@ -295,20 +284,17 @@
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="12o-jg-tNM" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController id="9av-0p-DeQ" customClass="FeedsTableViewController3" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="180" sectionHeaderHeight="22" sectionFooterHeight="22" id="crs-O5-G6Y">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="150" sectionHeaderHeight="22" sectionFooterHeight="22" id="crs-O5-G6Y">
                         <rect key="frame" x="0.0" y="64" width="320" height="367"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <adBannerView key="tableHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="87W-s7-zcC">
-                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <adBannerView key="tableHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="ChC-gy-Lco">
+                            <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
                             <requiredContentSizeIdentifiers>
                                 <string>ADBannerContentSizeLandscape</string>
                                 <string>ADBannerContentSizePortrait</string>
                             </requiredContentSizeIdentifiers>
-                            <connections>
-                                <outlet property="delegate" destination="9av-0p-DeQ" id="eyA-g8-7iZ"/>
-                            </connections>
                         </adBannerView>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="150" id="YTU-rM-2l5">
@@ -395,7 +381,7 @@
                                     <outlet property="delegate" destination="hfH-5Q-2Ez" id="xB8-UD-Mke"/>
                                 </connections>
                             </webView>
-                            <view userInteractionEnabled="NO" alpha="0.30000001192092896" contentMode="scaleToFill" id="Vaz-Mu-bkl">
+                            <view userInteractionEnabled="NO" alpha="0.5" contentMode="scaleToFill" id="Vaz-Mu-bkl">
                                 <rect key="frame" x="115" y="207" width="90" height="90"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -417,16 +403,13 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
-                            <adBannerView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="oxB-bf-raJ">
+                            <adBannerView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="LJq-HH-VKw">
                                 <rect key="frame" x="0.0" y="410" width="320" height="50"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <requiredContentSizeIdentifiers>
                                     <string>ADBannerContentSizeLandscape</string>
                                     <string>ADBannerContentSizePortrait</string>
                                 </requiredContentSizeIdentifiers>
-                                <connections>
-                                    <outlet property="delegate" destination="hfH-5Q-2Ez" id="bWf-Mr-8yU"/>
-                                </connections>
                             </adBannerView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -554,7 +537,7 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="UPe-Xv-JAx"/>
-        <segue reference="aTi-FH-ey1"/>
+        <segue reference="hxx-i1-mV4"/>
+        <segue reference="K2Q-zP-hxx"/>
     </inferredMetricsTieBreakers>
 </document>
