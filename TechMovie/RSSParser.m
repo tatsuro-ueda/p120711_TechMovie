@@ -10,6 +10,7 @@
 #import "RSSEntry.h"
 #import "NSURL+OgImage.h"
 #import "AFJSONRequestOperation.h"
+#import "NSString+URLEncode.h"
 
 @implementation RSSParser
 
@@ -52,6 +53,9 @@
     // エントリーを入れる配列をクリアする
     self.entries = [NSMutableArray arrayWithCapacity:0];
     
+    // イベントキューを作る
+    parseQueue = [[NSOperationQueue alloc] init];
+    
     // 解析開始
     if ([parser parse]) {
         
@@ -60,6 +64,10 @@
             ret = YES;
         }
     }
+    
+    // スレッドが終了するのを待つ
+    [parseQueue waitUntilAllOperationsAreFinished];
+    
     // 中間データを削除する
     [self.elementStack removeAllObjects];
     self.curEntry = nil;
@@ -162,45 +170,35 @@ didStartElement:(NSString *)elementName
         
         // 該当ページのog:imageを取得する
         // この箇所のコメントアウトを外すとog:imageのアドレス取得が非同期に行われる
-//        NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-//        [queue addOperationWithBlock:^{
-        [self currentEntry].ogImageURL = [NSURL ogImageURLWithURL:url];
-//        NSLog(@"%@", [self currentEntry].ogImageURL);
-        
-        // og:imageがない場合
-        if ([self currentEntry].ogImageURL == nil) {
+//        [parseQueue addOperationWithBlock:^{
+            [self currentEntry].ogImageURL = [NSURL ogImageURLWithURL:url];
             
-            // はてなAPIに問い合わせるURLをつくる
-            NSString *urlStringHatena = @"http://b.hatena.ne.jp/entry/jsonlite/?url=";
-            NSString *urlStringTarget = [NSString stringWithFormat:@"%@", url];
-            urlStringTarget = [urlStringTarget stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding];
-            NSString *urlStringWhole = [NSString stringWithFormat:@"%@%@", urlStringHatena, urlStringTarget]; 
-            NSURL *hatenaAPIURL = [NSURL URLWithString:urlStringWhole];
-            
-            // はてなAPIにリクエストを送り、返ってきたJSONを解析してスクリーンショットのURLを見つけ出す
-            NSURLRequest *request = [NSURLRequest requestWithURL:hatenaAPIURL];
-            __block NSURL *ssURL = nil;
-            AFJSONRequestOperation *operation = 
-            [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-//                ssURL = [NSURL URLWithString:[JSON valueForKeyPath:@"screenshot"]];
-                ssURL = [NSURL URLWithString:@"http://www.cnn.co.jp/storage/2012/08/06/1f663d84aef5d894b26fe3303ab112a7/mars-image-nasa.jpg"];
-                NSLog(@"inBlock: %d",(int) ssURL);
-
-//                ssURL = (__bridge NSURL)[NSURL URLWithString:[JSON valueForKeyPath:@"screenshot"]];
-                [self currentEntry].ogImageURL = ssURL;
-//                NSLog(@"ssURL = %@", ssURL);
-//                NSLog(@"curURL = %@", [self currentEntry].ogImageURL);
-            } failure:nil];
-            [operation start];
-//            NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-//            [queue addOperation: operation];
-//            [operation waitUntilFinished];
-//            [self currentEntry].ogImageURL = ssURL;
-//            NSLog(@"outURL = %@", [self currentEntry].ogImageURL);
-//            NSLog(@"outBlock: %d",(int) ssURL);
-//            NSLog(@"outss = %@", ssURL);
-        }                        
-//        }];
+            // og:imageがない場合
+            NSLog(@"beforeIf: %@", [self currentEntry].ogImageURL);
+            if ([self currentEntry].ogImageURL == nil) {
+                
+                // はてなAPIに問い合わせるURLをつくる
+                NSString *urlStringHatena = @"http://b.hatena.ne.jp/entry/jsonlite/?url=";
+                NSString *urlStringTarget = [NSString stringWithFormat:@"%@", url];
+                
+                urlStringTarget = [urlStringTarget urlEncodeUsingEncoding:NSASCIIStringEncoding];
+                
+                NSString *urlStringWhole = [NSString stringWithFormat:@"%@%@", urlStringHatena, urlStringTarget]; 
+                NSURL *hatenaAPIURL = [NSURL URLWithString:urlStringWhole];
+                
+                // はてなAPIにリクエストを送り、返ってきたJSONを解析してスクリーンショットのURLを見つけ出す
+                NSURLRequest *request = [NSURLRequest requestWithURL:hatenaAPIURL];
+                __block NSURL *ssURL = nil;
+                AFJSONRequestOperation *operation = 
+                [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+                    ssURL = [NSURL URLWithString:[JSON valueForKeyPath:@"screenshot"]];
+                    [self currentEntry].ogImageURL = ssURL;
+                } failure:nil];
+                NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+                [queue addOperation: operation];
+                [queue waitUntilAllOperationsAreFinished];
+            }                        
+//         }];
     }
     else if ([str isEqualToString:@"/rss/channel/item/pubDate"]) {
         

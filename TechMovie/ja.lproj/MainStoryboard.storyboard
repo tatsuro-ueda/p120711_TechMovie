@@ -11,7 +11,7 @@
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LAe-hA-86b" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController id="iOX-Um-iKG" customClass="FeedsTableViewController1" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="315" sectionHeaderHeight="22" sectionFooterHeight="22" id="pyP-VV-Oqu">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="310" sectionHeaderHeight="22" sectionFooterHeight="22" id="pyP-VV-Oqu">
                         <rect key="frame" x="0.0" y="64" width="320" height="367"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -24,11 +24,11 @@
                             </requiredContentSizeIdentifiers>
                         </adBannerView>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="315" id="mBk-B2-jez">
-                                <rect key="frame" x="0.0" y="72" width="320" height="315"/>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="310" id="mBk-B2-jez">
+                                <rect key="frame" x="0.0" y="72" width="320" height="310"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="314"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="309"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="left" text="Label" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="O08-gM-oof">
@@ -132,7 +132,7 @@
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ad0-I8-z57" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController id="xmd-cg-vC7" customClass="FeedsTableViewController2" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="315" sectionHeaderHeight="22" sectionFooterHeight="22" id="jFb-cr-vrZ">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="310" sectionHeaderHeight="22" sectionFooterHeight="22" id="jFb-cr-vrZ">
                         <rect key="frame" x="0.0" y="64" width="320" height="367"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -145,11 +145,11 @@
                             </requiredContentSizeIdentifiers>
                         </adBannerView>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="315" id="WwO-Su-diF">
-                                <rect key="frame" x="0.0" y="72" width="320" height="315"/>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="310" id="WwO-Su-diF">
+                                <rect key="frame" x="0.0" y="72" width="320" height="310"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="314"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="309"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="left" text="Label" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="non-DM-gQo">
@@ -284,7 +284,7 @@
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="12o-jg-tNM" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController id="9av-0p-DeQ" customClass="FeedsTableViewController3" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="315" sectionHeaderHeight="22" sectionFooterHeight="22" id="crs-O5-G6Y">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="310" sectionHeaderHeight="22" sectionFooterHeight="22" id="crs-O5-G6Y">
                         <rect key="frame" x="0.0" y="64" width="320" height="367"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -297,11 +297,11 @@
                             </requiredContentSizeIdentifiers>
                         </adBannerView>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="315" id="55g-UF-nX0">
-                                <rect key="frame" x="0.0" y="72" width="320" height="315"/>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="310" id="55g-UF-nX0">
+                                <rect key="frame" x="0.0" y="72" width="320" height="310"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="314"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="309"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="left" text="Label" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="PIm-Jw-K0C">
@@ -537,7 +537,7 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="hxx-i1-mV4"/>
-        <segue reference="K2Q-zP-hxx"/>
+        <segue reference="UPe-Xv-JAx"/>
+        <segue reference="aTi-FH-ey1"/>
     </inferredMetricsTieBreakers>
 </document>

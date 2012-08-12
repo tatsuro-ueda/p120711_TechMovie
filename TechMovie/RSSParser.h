@@ -13,6 +13,7 @@
 {
     UIProgressView  *_progressView;
     int             _totalLines;
+    NSOperationQueue *parseQueue;
 }
 
 // RSSの記事の配列

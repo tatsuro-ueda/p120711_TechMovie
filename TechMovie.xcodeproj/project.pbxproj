@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		07044FD215D4FC0400BD39A0 /* NSString+URLEncode.m in Sources */ = {isa = PBXBuildFile; fileRef = 07044FD115D4FC0400BD39A0 /* NSString+URLEncode.m */; };
 		071C3B6F15AD5CDC00E103A7 /* FeedsTableViewController2.m in Sources */ = {isa = PBXBuildFile; fileRef = 071C3B6E15AD5CDC00E103A7 /* FeedsTableViewController2.m */; };
 		071C3B7215AD5D2F00E103A7 /* FeedsTableViewController1.m in Sources */ = {isa = PBXBuildFile; fileRef = 071C3B7115AD5D2F00E103A7 /* FeedsTableViewController1.m */; };
 		071C3B7515AD5D5E00E103A7 /* FeedsTableViewController3.m in Sources */ = {isa = PBXBuildFile; fileRef = 071C3B7415AD5D5E00E103A7 /* FeedsTableViewController3.m */; };
@@ -63,6 +64,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		07044FC915D4ECC300BD39A0 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		07044FD015D4FC0400BD39A0 /* NSString+URLEncode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLEncode.h"; sourceTree = "<group>"; };
+		07044FD115D4FC0400BD39A0 /* NSString+URLEncode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+URLEncode.m"; sourceTree = "<group>"; };
 		071C3B6E15AD5CDC00E103A7 /* FeedsTableViewController2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedsTableViewController2.m; sourceTree = "<group>"; };
 		071C3B7115AD5D2F00E103A7 /* FeedsTableViewController1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedsTableViewController1.m; sourceTree = "<group>"; };
 		071C3B7415AD5D5E00E103A7 /* FeedsTableViewController3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedsTableViewController3.m; sourceTree = "<group>"; };
@@ -209,6 +213,7 @@
 		07C27AF015ACCB3800DC94AB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				07044FC915D4ECC300BD39A0 /* CoreFoundation.framework */,
 				07957F2F15C8215D00C5D33F /* iAd.framework */,
 				07DFEEFE15C678C900505832 /* ImageIO.framework */,
 				07C27AF115ACCB3800DC94AB /* UIKit.framework */,
@@ -221,6 +226,8 @@
 		07C27AF715ACCB3800DC94AB /* TechMovie */ = {
 			isa = PBXGroup;
 			children = (
+				07044FD015D4FC0400BD39A0 /* NSString+URLEncode.h */,
+				07044FD115D4FC0400BD39A0 /* NSString+URLEncode.m */,
 				0797E37A15C91AEE00DA3AFD /* NSURL+OgImage.h */,
 				0797E37B15C91AEE00DA3AFD /* NSURL+OgImage.m */,
 				0797E36F15C9136F00DA3AFD /* UIImage+OgImage.h */,
@@ -399,6 +406,7 @@
 				0797E36515C9097400DA3AFD /* NSString+Encode.m in Sources */,
 				0797E37115C9136F00DA3AFD /* UIImage+OgImage.m in Sources */,
 				0797E37C15C91AEF00DA3AFD /* NSURL+OgImage.m in Sources */,
+				07044FD215D4FC0400BD39A0 /* NSString+URLEncode.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

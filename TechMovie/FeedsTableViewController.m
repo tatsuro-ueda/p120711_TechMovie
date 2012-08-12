@@ -143,7 +143,6 @@ static NSInteger dateDescending(id item1, id item2, void *context)
         
         // RSSファイルを読み込む
         [self reloadFromContentsOfURLsFromArray:urlArray];
-        NSLog(@"reloaded from contents of URLs");
         
         // メインスレッドに戻す
         NSOperationQueue *mainQueue = [NSOperationQueue mainQueue];
@@ -180,42 +179,16 @@ static NSInteger dateDescending(id item1, id item2, void *context)
         // og:imageのビュー
         UIImageView *imageViewOgImage = (UIImageView *)[cell viewWithTag:5];
         NSURL *ogImageURL = [[self.itemsArray objectAtIndex:indexPath.row] ogImageURL];
-//        NSLog(@"%@", ogImageURL);
-        NSLog(@"inTable: %d",(int) ogImageURL);
 
-//        if (ogImageURL != nil) {
+        if (ogImageURL != nil) {
             UIImage* li = [UIImage animatedGIFNamed:@"loading3"];
             [imageViewOgImage setImageWithURL:ogImageURL
                              placeholderImage:li];
-//        }
-//        else {
-//            UIImage *noImage = [UIImage imageNamed:@"noImage.png"];
-//            imageViewOgImage.image = noImage;
-//        }
-                
-        //        // URLをつくる
-        //        NSString *urlStringHatena = @"http://b.hatena.ne.jp/entry/jsonlite/?url=";
-        //        NSString *urlStringTarget = [NSString stringWithFormat:@"%@", url2];
-        //        urlStringTarget = [urlStringTarget stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding];
-        //        NSString *urlStringWhole = [NSString stringWithFormat:@"%@%@", urlStringHatena, urlStringTarget]; 
-        //        NSURL *url = [NSURL URLWithString:urlStringWhole];
-        //        //    NSURL *url = [NSURL URLWithString:@"http://b.hatena.ne.jp/entry/jsonlite/?url=http://goodsite.cocolog-nifty.com/"];
-        //        //    NSURL *url = [NSURL URLWithString:@"http://iphone-dev.g.hatena.ne.jp/ktakayama/20120718/1342614096"];
-        //        
-        //        // リクエストを送り、返ってきたJSONを解析して目的のURLを見つけ出す
-        //        NSURLRequest *request = [NSURLRequest requestWithURL:url];
-        //        AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-        //            NSURL *ssURL = [NSURL URLWithString:[JSON valueForKeyPath:@"screenshot"]];
-        //            
-        //            // URLから画像を取り出し、ImageViewに貼り付ける
-        //            NSData *data = [NSData dataWithContentsOfURL:ssURL];
-        //            UIImageView *imageView = (UIImageView *)[cell viewWithTag:5];
-        //            imageView.image = [UIImage imageWithData:data];
-        //            NSLog(@"%@", [JSON valueForKeyPath:@"screenshot"]);
-        //        } failure:nil];
-        //        [operation start];
-        
-        
+        }
+        else {
+            UIImage *noImage = [UIImage imageNamed:@"noImage.png"];
+            imageViewOgImage.image = noImage;
+        }
         
         // 文字列を設定する
         UILabel *labelTitle = (UILabel*)[cell viewWithTag:1];
