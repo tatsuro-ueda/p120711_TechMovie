@@ -52,6 +52,8 @@
 		07C27B2315ACCBDD00DC94AB /* RSSParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 07C27B1D15ACCBDD00DC94AB /* RSSParser.m */; };
 		07C27B2815ACCCB100DC94AB /* FeedsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 07C27B2715ACCCB100DC94AB /* FeedsTableViewController.m */; };
 		07C27B2C15ACFEE700DC94AB /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 07C27B2B15ACFEE700DC94AB /* WebViewController.m */; };
+		07CAF5E115D7D4BB00C3DFFE /* noImage2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 07CAF5DF15D7D4BB00C3DFFE /* noImage2@2x.png */; };
+		07CAF5E215D7D4BB00C3DFFE /* noImage2.png in Resources */ = {isa = PBXBuildFile; fileRef = 07CAF5E015D7D4BB00C3DFFE /* noImage2.png */; };
 		07DFEEFC15C6789F00505832 /* UIImage+GIF.m in Sources */ = {isa = PBXBuildFile; fileRef = 07DFEEFB15C6789F00505832 /* UIImage+GIF.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		07DFEEFF15C678C900505832 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07DFEEFE15C678C900505832 /* ImageIO.framework */; };
 		07E55A8515BAB133002AEAD1 /* NavigationViewController2.m in Sources */ = {isa = PBXBuildFile; fileRef = 07E55A8415BAB133002AEAD1 /* NavigationViewController2.m */; };
@@ -133,6 +135,8 @@
 		07C27B2715ACCCB100DC94AB /* FeedsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedsTableViewController.m; sourceTree = "<group>"; };
 		07C27B2A15ACFEE700DC94AB /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
 		07C27B2B15ACFEE700DC94AB /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
+		07CAF5DF15D7D4BB00C3DFFE /* noImage2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "noImage2@2x.png"; sourceTree = "<group>"; };
+		07CAF5E015D7D4BB00C3DFFE /* noImage2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = noImage2.png; sourceTree = "<group>"; };
 		07DFEEFA15C6789F00505832 /* UIImage+GIF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+GIF.h"; sourceTree = "<group>"; };
 		07DFEEFB15C6789F00505832 /* UIImage+GIF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+GIF.m"; sourceTree = "<group>"; };
 		07DFEEFE15C678C900505832 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
@@ -259,6 +263,8 @@
 		07C27AF815ACCB3800DC94AB /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				07CAF5DF15D7D4BB00C3DFFE /* noImage2@2x.png */,
+				07CAF5E015D7D4BB00C3DFFE /* noImage2.png */,
 				07F9FBEE15C5062C0050014A /* noImage@2x.png */,
 				07F9FBEC15C506200050014A /* noImage.png */,
 				07AF759615BD1DC600B6EF3E /* loading3.gif */,
@@ -369,6 +375,8 @@
 				07AF759715BD1DC600B6EF3E /* loading3.gif in Resources */,
 				07F9FBED15C506200050014A /* noImage.png in Resources */,
 				07F9FBEF15C5062C0050014A /* noImage@2x.png in Resources */,
+				07CAF5E115D7D4BB00C3DFFE /* noImage2@2x.png in Resources */,
+				07CAF5E215D7D4BB00C3DFFE /* noImage2.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -494,7 +502,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TechMovie/TechMovie-Prefix.pch";
 				INFOPLIST_FILE = "TechMovie/TechMovie-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
@@ -507,7 +515,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TechMovie/TechMovie-Prefix.pch";
 				INFOPLIST_FILE = "TechMovie/TechMovie-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;

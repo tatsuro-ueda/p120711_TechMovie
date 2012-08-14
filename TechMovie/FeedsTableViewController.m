@@ -186,7 +186,7 @@ static NSInteger dateDescending(id item1, id item2, void *context)
                              placeholderImage:li];
         }
         else {
-            UIImage *noImage = [UIImage imageNamed:@"noImage.png"];
+            UIImage *noImage = [UIImage imageNamed:@"noImage2.png"];
             imageViewOgImage.image = noImage;
         }
         
