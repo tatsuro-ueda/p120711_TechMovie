@@ -31,7 +31,13 @@
 }
 
 - (IBAction)showSetting:(id)sender {
-    [self performSegueWithIdentifier:@"showSetting" sender:_tagString];
+//    [self performSegueWithIdentifier:@"showSetting" sender:_tagString];
+
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *directory = [paths objectAtIndex:0];
+    NSString *filePath = [directory stringByAppendingPathComponent:@"data.dat"];
+
+    BOOL successful = 
 }
 
 - (IBAction)refresh:(id)sender {

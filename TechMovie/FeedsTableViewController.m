@@ -271,6 +271,7 @@ static NSInteger dateDescending(id item1, id item2, void *context)
         // 記事を読み込む
         [newArray addObjectsFromArray:[parser entries]];
     }
+    
     return newArray;
 }
 
