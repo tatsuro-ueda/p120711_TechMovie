@@ -151,6 +151,26 @@ static NSInteger dateDescending(id item1, id item2, void *context)
             // テーブル更新
             [alertView dismissWithClickedButtonIndex:0 animated:YES];
             [self.tableView reloadData];
+
+            // 新着動画の件数を表示する
+            NSInteger numNewEntry = 0;
+            for (RSSEntry *entry in self.itemsArray) {
+                if (entry.isNewEntry) {
+                    numNewEntry++;
+                }
+            }
+            UIAlertView *alertView = [[UIAlertView alloc] init];
+            if (numNewEntry > 0) {
+                alertView.title = [NSString stringWithFormat:@"%d 件の新着動画があります",numNewEntry]; 
+            } 
+            else {
+                alertView.title = @"新着動画はありません";
+            }
+            alertView.message = nil;
+            alertView.delegate = self;
+            [alertView addButtonWithTitle:@"OK"];
+            [alertView show];
+
         }];
     }];
 }    
@@ -195,6 +215,7 @@ static NSInteger dateDescending(id item1, id item2, void *context)
         UILabel *labelDate = (UILabel*)[cell viewWithTag:2];
         UILabel *labelDetail = (UILabel*)[cell viewWithTag:3];
         UILabel *labelHatebuNumber = (UILabel*)[cell viewWithTag:4];
+        UILabel *labelNew = (UILabel*)[cell viewWithTag:6];
         
         // タイトルラベル
         labelTitle.text = [[NSString alloc] initWithString:
@@ -205,6 +226,14 @@ static NSInteger dateDescending(id item1, id item2, void *context)
         NSTimeInterval t = [datePub timeIntervalSinceNow];
         NSInteger intervalDays = - t / (60 * 60 * 12);
         labelDate.text = [[NSString alloc] initWithFormat:@"%d 日前", intervalDays];
+        
+        // 「NEW」ラベル
+        if ([[self.itemsArray objectAtIndex:indexPath.row] isNewEntry]) {
+            labelNew.text = @"NEW";
+        }
+        else {
+            labelNew.text = nil;
+        }
 
         // 詳細ラベル
         // nilチェックしないとクラッシュする
@@ -257,6 +286,15 @@ static NSInteger dateDescending(id item1, id item2, void *context)
     
     // データメンバーに設定する
     self.itemsArray = newArray;
+
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *directory = [paths objectAtIndex:0];
+    NSString *fileName = [NSString stringWithFormat:@"%@.dat", _tagString];
+    NSString *filePath = [directory stringByAppendingPathComponent:fileName];
+    BOOL successful = [NSKeyedArchiver archiveRootObject:self.itemsArray toFile:filePath];
+    if (successful) {
+        NSLog(@"%@", @"データの保存に成功しました。");
+    }
 }
 
 // URLからファイルを読み込み、アイテムの配列を返すメソッド
@@ -266,7 +304,7 @@ static NSInteger dateDescending(id item1, id item2, void *context)
     RSSParser *parser = [[RSSParser alloc] init];
     
     // URLから読み込む
-    if ([parser parseContentsOfURL:url progressView:_progressView]) {
+    if ([parser parseContentsOfURL:url progressView:_progressView tag:_tagString]) {
         
         // 記事を読み込む
         [newArray addObjectsFromArray:[parser entries]];

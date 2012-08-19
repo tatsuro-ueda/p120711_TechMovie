@@ -13,7 +13,8 @@
 {
     UIProgressView  *_progressView;
     int             _totalLines;
-    NSOperationQueue *parseQueue;
+    NSArray         *_oldFeeds;
+    BOOL            _newEntryComes;
 }
 
 // RSSの記事の配列
@@ -24,7 +25,7 @@
 @property (strong, nonatomic) NSMutableArray *elementStack;
 @property (strong, nonatomic) RSSEntry *curEntry;
 
-- (BOOL)parseContentsOfURL:(NSURL *)url progressView:(UIProgressView *)progressView;
+- (BOOL)parseContentsOfURL:(NSURL *)url progressView:(UIProgressView *)progressView tag:(NSString *)tag;
 - (NSDate *)pubDateWithString:(NSString *)string;
 
 @end

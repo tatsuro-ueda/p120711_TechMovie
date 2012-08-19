@@ -33,7 +33,7 @@
 
 // URLからRSSファイルを読み込む
 // ここではRSS2.0のみ対応する
-- (BOOL)parseContentsOfURL:(NSURL *)url progressView:(UIProgressView *)progressView
+- (BOOL)parseContentsOfURL:(NSURL *)url progressView:(UIProgressView *)progressView tag:(NSString *)tag
 {
     _progressView = progressView;
     BOOL ret = NO;
@@ -53,8 +53,12 @@
     // エントリーを入れる配列をクリアする
     self.entries = [NSMutableArray arrayWithCapacity:0];
     
-    // イベントキューを作る
-    parseQueue = [[NSOperationQueue alloc] init];
+    // 以前ダウンロードしたフィードを用意する
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *directory = [paths objectAtIndex:0];
+    NSString *fileName = [NSString stringWithFormat:@"%@.dat", tag];
+    NSString *filePath = [directory stringByAppendingPathComponent:fileName];
+    _oldFeeds = [NSKeyedUnarchiver unarchiveObjectWithFile:filePath];
     
     // 解析開始
     if ([parser parse]) {
@@ -64,9 +68,6 @@
             ret = YES;
         }
     }
-    
-    // スレッドが終了するのを待つ
-    [parseQueue waitUntilAllOperationsAreFinished];
     
     // 中間データを削除する
     [self.elementStack removeAllObjects];
@@ -168,9 +169,21 @@ didStartElement:(NSString *)elementName
         NSURL *url = [NSURL URLWithString:string];
         [[self currentEntry] setUrl:url];
         
-        // 該当ページのog:imageを取得する
-        // この箇所のコメントアウトを外すとog:imageのアドレス取得が非同期に行われる
-//        [parseQueue addOperationWithBlock:^{
+        for (RSSEntry *entry in _oldFeeds) {
+            if ([url isEqual:entry.url]) {
+                [[self currentEntry] setDate:entry.date];
+                [[self currentEntry] setText:entry.text];
+                [[self currentEntry] setOgImageURL:entry.ogImageURL];
+                [[self currentEntry] setIsNewEntry:NO];
+                return;
+            }
+            [[self currentEntry] setIsNewEntry:YES];
+        }
+        if (![[self currentEntry] ogImageURL]) {
+
+            // 該当ページのog:imageを取得する
+            // この箇所のコメントアウトを外すとog:imageのアドレス取得が非同期に行われる
+            //        [parseQueue addOperationWithBlock:^{
             [self currentEntry].ogImageURL = [NSURL ogImageURLWithURL:url];
             
             // og:imageがない場合
@@ -198,7 +211,8 @@ didStartElement:(NSString *)elementName
                 [queue addOperation: operation];
                 [queue waitUntilAllOperationsAreFinished];
             }                        
-//         }];
+            //         }];
+        }
     }
     else if ([str isEqualToString:@"/rss/channel/item/pubDate"]) {
         

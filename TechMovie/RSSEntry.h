@@ -8,12 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
-@interface RSSEntry : NSObject
+@interface RSSEntry : NSObject<NSCoding>
 
 @property (strong) NSURL *url;
 @property (strong) NSDate *date;
 @property (strong) NSString *title;
 @property (strong) NSString *text;
 @property (copy, atomic) NSURL *ogImageURL;
+@property BOOL isNewEntry;
 
 @end
